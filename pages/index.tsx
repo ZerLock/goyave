@@ -4,7 +4,7 @@ import db from 'utils/database';
 const Home = (): JSX.Element => {
 
     const setDoc = async () => {
-        db.setDoc('test/xxx', { text: 'hello world!' });
+        db.setDoc('test/xxx', { text: 'hey!' });
     }
 
     return (
