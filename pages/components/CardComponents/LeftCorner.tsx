@@ -57,6 +57,27 @@ const LeftCorner = ({ size, type, number, sign }: CardProps): JSX.Element => {
                         +2
                     </Text>
                 )}
+                {type === "super" && sign === "wild" && (
+                    <Image
+                        src={getImage(sign)}
+                        alt={sign}
+                        width={"30%"}
+                        height={size * 0.3 - (size * 0.07) + "px"}
+                    />
+                )}
+                {type === "super" && sign === "wild_draw_four" && (
+                    <Text
+                    fontSize={size * 0.25 + "px"}
+                    color={"white"}
+                    textDecoration={
+                        number === "9" || number === "6"
+                            ? "underline"
+                            : "none"
+                    }
+                >
+                    +4
+                </Text>
+                )}
             </Box>
         </>
     );

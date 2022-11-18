@@ -11,7 +11,6 @@ interface CardProps {
 const CenterCard = ({ size, type, number, sign }: CardProps): JSX.Element => {
     function getImage(sign: string) {
         if (!sign) return null;
-        console.log(sign);
         return `/cards/${sign}.png`;
     }
 
@@ -38,6 +37,14 @@ const CenterCard = ({ size, type, number, sign }: CardProps): JSX.Element => {
                     </Text>
                 )}
                 {type === "special" && (
+                    <Image
+                        src={getImage(sign)}
+                        alt={sign}
+                        width={"70%"}
+                        height={size * 0.63666 - (size * 0.07) + "px"}
+                    />
+                )}
+                {type === "super" && (
                     <Image
                         src={getImage(sign)}
                         alt={sign}

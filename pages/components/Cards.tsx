@@ -44,11 +44,11 @@ const Card = ({ size, type, color, number, sign }: CardProps): JSX.Element => {
                 boxShadow="5px 8px 10px rgba(0,0,0,0.5)"
                 width={size + `px`}
                 height={size * 1.63666 + `px`}
-                padding={type === "special" && sign !== "draw_two" ? size * 0.1 + `px` :"none"}
-                paddingRight={type === "number" || sign === "draw_two" ? size * 0.1 + `px` : "none"}
-                paddingLeft={type === "number" || sign === "draw_two" ? size * 0.1 + `px` : "none"}
-                paddingTop={type === "number" || sign === "draw_two" ? size * 0.02 + `px` : "none"}
-                paddingBottom={type === "number" || sign === "draw_two" ? size * 0.02 + `px` : "none"}
+                padding={(type === "special" || type === "super") && sign !== "draw_two" ? size * 0.1 + `px` :"none"}
+                paddingRight={type === "number" || (sign === "draw_two" || sign === "wild_draw_four") ? size * 0.1 + `px` : "none"}
+                paddingLeft={type === "number" || (sign === "draw_two" || sign === "wild_draw_four") ? size * 0.1 + `px` : "none"}
+                paddingTop={type === "number" || (sign === "draw_two" || sign === "wild_draw_four") ? size * 0.02 + `px` : "none"}
+                paddingBottom={type === "number" || (sign === "draw_two" || sign === "wild_draw_four") ? size * 0.02 + `px` : "none"}
             >
                 <VStack
                     spacing="0"
