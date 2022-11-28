@@ -1,5 +1,4 @@
 import _ from "lodash";
-import types from "typescript-is";
 import { useState } from "react";
 import {
   HStack,
@@ -15,32 +14,78 @@ import {
   FormLabel,
   Input,
   Select,
+  useToast,
 } from "@chakra-ui/react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import MenuButton from "components/menuButton";
 import Modal from "components/modal";
-import type { CreateRoomParams } from "models";
 import axios from "axios";
 
 const Home = (): JSX.Element => {
+  const toast = useToast();
+
   const {
     isOpen: isOpenCreate,
     onOpen: onOpenCreate,
     onClose: onCloseCreate,
   } = useDisclosure();
+  const {
+    isOpen: isOpenJoin,
+    onOpen: onOpenJoin,
+    onClose: onCloseJoin,
+  } = useDisclosure();
   const [name, setName] = useState<string>("");
+  const [roomId, setRoomId] = useState<string>("");
   const [roomPassword, setRoomPassword] = useState<string>("");
   const [numPlayers, setNumPlayers] = useState<number>(3);
 
   const numberOfPlayers = ["3", "4", "5", "6"];
 
+  const resetData = () => {
+    setName("");
+    setRoomId("");
+    setRoomPassword("");
+    setNumPlayers(3);
+  };
+
   const createRoom = async () => {
-    const params = types.assertType<CreateRoomParams>({
+    const result = await axios.post("/api/room/create", {
       name,
       password: roomPassword,
-      number_of_plaers: numPlayers,
+      number_of_players: numPlayers,
     });
-    await axios.post("/api/createRoom", params);
+
+    // Display toast success or error
+    toast({
+      title: result.data.status,
+      status: result.data.status == "ok" ? "success" : "error",
+      duration: 3000,
+      isClosable: true,
+    });
+
+    // Reset data
+    resetData();
+    onCloseCreate(); // Close modal
+  };
+
+  const joinRoom = async () => {
+    const result = await axios.post("/api/room/join", {
+      name,
+      room_id: roomId,
+      password: roomPassword,
+    });
+
+    // Display toast success or error
+    toast({
+      title: result.data.status,
+      status: result.data.status == "ok" ? "success" : "error",
+      duration: 3000,
+      isClosable: true,
+    });
+
+    // Reset data
+    resetData();
+    onCloseJoin(); // Close modal
   };
 
   return (
@@ -48,7 +93,7 @@ const Home = (): JSX.Element => {
       <Center h="100vh">
         <HStack spacing="150px">
           <MenuButton text="Create room" onClick={onOpenCreate} />
-          <MenuButton text="Join room" onClick={() => {}} />
+          <MenuButton text="Join room" onClick={onOpenJoin} />
         </HStack>
 
         {/* Help */}
@@ -74,6 +119,50 @@ const Home = (): JSX.Element => {
           <Text>Copyright © 2022 goyave, All rights reserved.</Text>
         </HStack>
       </Center>
+
+      {/* Join room modal */}
+      <Modal
+        isOpen={isOpenJoin}
+        onClose={onCloseJoin}
+        title="Join room"
+        CTA={
+          <Button colorScheme="teal" w="90%" onClick={async () => joinRoom()}>
+            Join
+          </Button>
+        }
+      >
+        <>
+          <VStack spacing="10px">
+            <FormControl>
+              <FormLabel>Name</FormLabel>
+              <Input
+                placeholder="your name"
+                variant="outline"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Room id</FormLabel>
+              <Input
+                placeholder="room id"
+                variant="outline"
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value)}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Room password</FormLabel>
+              <Input
+                placeholder="room password"
+                variant="outline"
+                value={roomPassword}
+                onChange={(e) => setRoomPassword(e.target.value)}
+              />
+            </FormControl>
+          </VStack>
+        </>
+      </Modal>
 
       {/* Create room modal */}
       <Modal

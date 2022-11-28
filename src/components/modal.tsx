@@ -36,7 +36,7 @@ const Modal = ({
         {children}
       </ModalBody>
 
-      <ModalFooter flexDirection="row" alignItems="arround">
+      <ModalFooter flexDirection="row" alignItems="arround" gap="2">
         <Button w="90%" colorScheme="teal" variant="outline" onClick={onClose}>
           Close
         </Button>
