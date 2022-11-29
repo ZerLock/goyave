@@ -21,7 +21,7 @@ export default async function handler(
 
   const newUser: User = {
     name: req.body.name,
-    cards: [],
+    cards: await rules.dispatchCards(),
     one_card_left: false,
   };
 

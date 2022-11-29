@@ -43,7 +43,7 @@ const rules = {
         type: this.randomInArray<CardType>(CARDS),
         color: this.randomInArray<CardColor>(CARD_COLORS),
         used: false,
-      }
+      };
       cards.push(card);
     }
 
