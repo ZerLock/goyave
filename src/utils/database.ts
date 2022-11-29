@@ -7,8 +7,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import rules from "./rules";
-import type { Game } from "../models";
-import { GAMES } from "./consts";
+import type { Game, GlobalConfig } from "../models";
+import { GAMES, CONFIGS, GLOBAL } from "./consts";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_apiKey,
@@ -36,6 +36,11 @@ const db = {
     await setDoc(ref, data);
   },
 
+  setGlobalConfig: async function (data: Partial<GlobalConfig>): Promise<void> {
+    const ref = doc(app, `${CONFIGS}/${GLOBAL}`);
+    await setDoc(ref, data);
+  },
+
   updateRoom: async function (id: string, data: Partial<Game>): Promise<void> {
     const ref = doc(app, `${GAMES}/${id}`);
     await updateDoc(ref, data);
@@ -46,6 +51,18 @@ const db = {
     const snap = await getDoc(ref);
 
     return snap.exists() ? snap.data() : null;
+  },
+
+  getGlobalConfig: async function (): Promise<GlobalConfig> {
+    const ref = doc(app, `${CONFIGS}/${GLOBAL}`);
+    const snap = await getDoc(ref);
+
+    const defaultConfig: GlobalConfig = {
+      start_cards_number: 7,
+      turn_timeout: 60, // seconds
+    };
+
+    return snap.exists() ? (snap.data() as GlobalConfig) : defaultConfig;
   },
 
   getRoom: async function (id: string): Promise<Game | null> {

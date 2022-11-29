@@ -1,5 +1,7 @@
 import db from "./database";
-import { Game } from "models";
+import _ from "lodash";
+import type { Card, Game, CardType, CardColor } from "models";
+import { CARDS, CARD_COLORS } from "./consts";
 
 const rules = {
   isGameExists: async function (id: Game["id"]) {
@@ -26,6 +28,26 @@ const rules = {
       }
     }
     return false;
+  },
+
+  randomInArray: function <T>(array: Array<any>): T {
+    return _.sample(array as any);
+  },
+
+  dispatchCards: async function (): Promise<Card[]> {
+    const globalConfig = await db.getGlobalConfig();
+    const cards: Card[] = [];
+
+    for (let i = 0; i < globalConfig.start_cards_number; i++) {
+      const card: Card = {
+        type: this.randomInArray<CardType>(CARDS),
+        color: this.randomInArray<CardColor>(CARD_COLORS),
+        used: false,
+      };
+      cards.push(card);
+    }
+
+    return cards;
   },
 };
 
