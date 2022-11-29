@@ -15,7 +15,14 @@ export type CardType =
   | "wild"
   | "wild_draw_four";
 
+export type CardColor =
+  | "red"
+  | "green"
+  | "blue"
+  | "yellow";
+
 export interface Card {
   type: CardType;
+  color: CardColor;
   used: boolean;
 }
